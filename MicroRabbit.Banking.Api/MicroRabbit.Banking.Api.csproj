@@ -21,8 +21,4 @@
     <ProjectReference Include="..\MicroRabbit.IoC\MicroRabbit.IoC.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>

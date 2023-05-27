@@ -1,4 +1,6 @@
 using MicroRabbit.Banking.Data.Context;
+using MicroRabbit.Domain.Core.Bus;
+using MicroRabbit.Info.Bus;
 using MicroRabbit.IoC;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -18,10 +20,8 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.Get
 
 RegisterServices();
 
-
-
 var app = builder.Build();
-
+ 
 
 void RegisterServices()
 {
