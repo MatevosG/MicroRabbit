@@ -1,0 +1,25 @@
+
+-- add in DependencyContainer   this -    services.AddTransient<BankingDbContext>();
+
+
+
+---------  banking microservise  -----------------------
+
+set startap project Banking.Api
+
+select default project Banking.Data
+
+add-migration initial -context BankingDbContext
+
+update-database -context BankingDbContext
+
+
+---------  banking microservise  -----------------------
+
+set startap project Transfer.Api
+
+select default project Transfer.Data
+
+add-migration initial -context TransferDbContext
+
+update-database -context TransferDbContext

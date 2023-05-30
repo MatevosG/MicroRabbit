@@ -12,7 +12,7 @@ namespace MicroRabbit.Banking.Api.Controllers
     {
         private readonly IAccountService _accountService;
 
-        public BankingController(IAccountService accountService, IEventBus bus)
+        public BankingController(IAccountService accountService)
         {
             _accountService = accountService;
         }
