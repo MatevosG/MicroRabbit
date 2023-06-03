@@ -2,6 +2,7 @@
 using MicroRabbit.Domain.Core.Bus;
 using MicroRabbit.Domain.Core.Commands;
 using MicroRabbit.Domain.Core.Events;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -18,11 +19,14 @@ namespace MicroRabbit.Info.Bus
         private readonly IMediator _mediator;
         private readonly Dictionary<string, List<Type>> _handlers;
         private readonly List<Type> _eventTypes;
-        public RabbitMQBus(IMediator mediator)
+        private readonly IServiceScopeFactory _serviceScopeFactory;
+        public RabbitMQBus(IMediator mediator, IServiceScopeFactory serviceScopeFactory)
         {
             _mediator = mediator;
             _handlers = new Dictionary<string, List<Type>>();
             _eventTypes = new List<Type>();
+            _serviceScopeFactory = serviceScopeFactory;
+
         }
         public void Publish<T>(T @event) where T : Event
         {
@@ -51,7 +55,7 @@ namespace MicroRabbit.Info.Bus
             where TH : IEventHandler<T>
         {
             var eventName = typeof(T).Name;
-            var handlerType = typeof(T);
+            var handlerType = typeof(TH);
 
             if(!_eventTypes.Contains(typeof(T)))
                 _eventTypes.Add(typeof(T));
@@ -69,37 +73,36 @@ namespace MicroRabbit.Info.Bus
 
         private void StartBasicConsume<T>() where T : Event
         {
-            var factory = new ConnectionFactory() 
+            var factory = new ConnectionFactory()
             {
                 HostName = "localhost",
-                DispatchConsumersAsync = true,
+                DispatchConsumersAsync = true
             };
 
             var connection = factory.CreateConnection();
             var channel = connection.CreateModel();
 
-            var eventName = typeof (T).Name;
+            var eventName = typeof(T).Name;
+
             channel.QueueDeclare(eventName, false, false, false, null);
 
             var consumer = new AsyncEventingBasicConsumer(channel);
+            consumer.Received += Consumer_Received;
 
-            consumer.Received += Consumer_Recived;
-
-            channel.BasicConsume(eventName, true, consumer);     
-
+            channel.BasicConsume(eventName, true, consumer);
         }
 
-        private async Task Consumer_Recived(object sender, BasicDeliverEventArgs e)
+        private async Task Consumer_Received(object sender, BasicDeliverEventArgs e)
         {
             var eventName = e.RoutingKey;
             var message = Encoding.UTF8.GetString(e.Body.ToArray());
+
             try
             {
-                await ProcessEvent(eventName,message).ConfigureAwait(false);
+                await ProcessEvent(eventName, message).ConfigureAwait(false);
             }
-            finally
+            catch (Exception ex)
             {
-
             }
         }
 
@@ -107,15 +110,19 @@ namespace MicroRabbit.Info.Bus
         {
             if (_handlers.ContainsKey(eventName))
             {
-                var subscriptions = _handlers[eventName];
-                foreach (var item in subscriptions)
+                using (var scope = _serviceScopeFactory.CreateScope())
                 {
-                    var handler = Activator.CreateInstance(item);
-                    if (handler == null) continue;
-                    var eventType = _eventTypes.SingleOrDefault(t => t.Name == eventName);
-                    var @event = JsonConvert.DeserializeObject(message, eventType); 
-                    var conreteType = typeof(IEventHandler<>).MakeGenericType(eventType);
-                    await (Task)conreteType.GetMethod("Handle").Invoke(handler, new object[] { @event });   
+                    var subscriptions = _handlers[eventName];
+                    foreach (var subscription in subscriptions)
+                    {
+                        var handler = Activator.CreateInstance(subscription);
+                        //var handler = scope.ServiceProvider.GetService(subscription);
+                        if (handler == null) continue;
+                        var eventType = _eventTypes.SingleOrDefault(t => t.Name == eventName);
+                        var @event = JsonConvert.DeserializeObject(message, eventType);
+                        var conreteType = typeof(IEventHandler<>).MakeGenericType(eventType);
+                        await (Task)conreteType.GetMethod("Handle").Invoke(handler, new object[] { @event });
+                    }
                 }
             }
         }
