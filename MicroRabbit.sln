@@ -60,6 +60,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		solutionItem.txt = solutionItem.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroRabbit.MVC", "MicroRabbit.MVC\MicroRabbit.MVC.csproj", "{3D3D398B-748E-495C-8C90-9F47FE481DC9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -110,6 +112,10 @@ Global
 		{5915C6C6-BD99-411A-8C3C-ACF11F010798}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5915C6C6-BD99-411A-8C3C-ACF11F010798}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5915C6C6-BD99-411A-8C3C-ACF11F010798}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D3D398B-748E-495C-8C90-9F47FE481DC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D3D398B-748E-495C-8C90-9F47FE481DC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D3D398B-748E-495C-8C90-9F47FE481DC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D3D398B-748E-495C-8C90-9F47FE481DC9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -136,6 +142,7 @@ Global
 		{EA203729-670A-4946-9AA8-181DAADFD21E} = {C1D6887D-AD48-43EB-A4AC-B1B317440C03}
 		{92B191B3-22D0-4E25-A034-F7F95426C984} = {D3B9989D-8C9C-446D-BFFE-56C325AC2597}
 		{5915C6C6-BD99-411A-8C3C-ACF11F010798} = {87052E58-B1E6-4950-875B-D021C31AEC46}
+		{3D3D398B-748E-495C-8C90-9F47FE481DC9} = {6ABB5415-DEC7-48F2-8275-2137EEE51E2E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C2006466-8037-4932-88E1-57E3ED48793A}
