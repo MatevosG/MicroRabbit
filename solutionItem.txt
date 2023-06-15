@@ -2,6 +2,12 @@
 -- add in DependencyContainer   this -    services.AddTransient<BankingDbContext>();
 
 
+-- add microsoft.extensions.dependancyinjection in MicroRabbit.Info.Bus project that can get handler instance instance 
+          add in serviceRegistration
+          var scopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
+          return new RabbitMQBus(sp.GetService<IMediator>(),scopeFactory);
+
+
 --------- RabbitMQ Commands ----------------------------
 
 rabbitmqctl stop_app

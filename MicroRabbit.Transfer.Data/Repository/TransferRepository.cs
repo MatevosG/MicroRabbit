@@ -13,6 +13,12 @@ namespace MicroRabbit.Transfer.Data.Repository
             _ctx = ctx;
         }
 
+        public async Task AddAsync(TransferLog transferLog)
+        {
+            await _ctx.AccountTransfers.AddAsync(transferLog);
+            await _ctx.SaveChangesAsync();
+        }
+
         public IEnumerable<TransferLog> GetTransferLogs()
         {
             return _ctx.AccountTransfers;

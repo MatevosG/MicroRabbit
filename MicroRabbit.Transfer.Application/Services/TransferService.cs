@@ -13,6 +13,11 @@ namespace MicroRabbit.Transfer.Application.Services
             _transferRepository = transferRepository;
         }
 
+        public async Task AddAsync(TransferLog transferLog)
+        {
+            await _transferRepository.AddAsync(transferLog);
+        }
+
         public IEnumerable<TransferLog> GetTransferLogs()
         {
             return _transferRepository.GetTransferLogs();
